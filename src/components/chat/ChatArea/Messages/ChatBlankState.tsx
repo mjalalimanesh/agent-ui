@@ -172,7 +172,7 @@ const ChatBlankState = () => {
               </div>
             </span>
           </div>
-          <p>For the full experience, visit the AgentOS</p>
+          <p>For the full experience, visit the Agent Playground</p>
         </motion.h1>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -185,7 +185,7 @@ const ChatBlankState = () => {
             variant="primary"
             text="GO TO DOCS"
           />
-          <ActionButton href={EXTERNAL_LINKS.agenOS} text="VISIT AGENTOS" />
+          <ActionButton href={EXTERNAL_LINKS.agenOS} text="VISIT AGENT PLAYGROUND" />
         </motion.div>
       </div>
     </section>
