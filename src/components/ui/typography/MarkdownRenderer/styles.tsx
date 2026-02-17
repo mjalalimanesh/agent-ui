@@ -78,7 +78,7 @@ const ListItem = ({ className, ...props }: ListItemProps) => (
 )
 
 const Paragraph = ({ className, ...props }: ParagraphProps) => (
-  <div
+  <p
     className={cn(className, PARAGRAPH_SIZES.body, 'bidi-plaintext text-start')}
     dir="auto"
     {...filterProps(props)}

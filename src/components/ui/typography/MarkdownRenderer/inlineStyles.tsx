@@ -79,7 +79,7 @@ const Paragraph = ({ className, ...props }: ParagraphProps) => (
 
 const EmphasizedText = ({ className, ...props }: EmphasizedTextProps) => (
   <em
-    className={cn(className, 'PARAGRAPH_SIZES.lead')}
+    className={cn(className, PARAGRAPH_SIZES.lead)}
     {...filterProps(props)}
   />
 )
@@ -90,14 +90,14 @@ const ItalicText = ({ className, ...props }: ItalicTextProps) => (
 
 const StrongText = ({ className, ...props }: StrongTextProps) => (
   <strong
-    className={cn(className, 'PARAGRAPH_SIZES.lead')}
+    className={cn(className, PARAGRAPH_SIZES.lead)}
     {...filterProps(props)}
   />
 )
 
 const BoldText = ({ className, ...props }: BoldTextProps) => (
   <b
-    className={cn(className, 'PARAGRAPH_SIZES.lead')}
+    className={cn(className, PARAGRAPH_SIZES.lead)}
     {...filterProps(props)}
   />
 )
