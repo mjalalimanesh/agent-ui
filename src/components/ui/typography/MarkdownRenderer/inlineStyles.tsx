@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils'
 import type {
   UnorderedListProps,
   OrderedListProps,
+  ListItemProps,
   EmphasizedTextProps,
   ItalicTextProps,
   StrongTextProps,
@@ -41,8 +42,9 @@ const UnorderedList = ({ className, ...props }: UnorderedListProps) => (
     className={cn(
       className,
       PARAGRAPH_SIZES.lead,
-      'flex list-disc flex-col pl-10'
+      'rtl-logical-indent flex list-disc flex-col bidi-plaintext text-start'
     )}
+    dir="auto"
     {...filterProps(props)}
   />
 )
@@ -52,14 +54,27 @@ const OrderedList = ({ className, ...props }: OrderedListProps) => (
     className={cn(
       className,
       PARAGRAPH_SIZES.lead,
-      'flex list-decimal flex-col pl-10'
+      'rtl-logical-indent flex list-decimal flex-col bidi-plaintext text-start'
     )}
+    dir="auto"
+    {...filterProps(props)}
+  />
+)
+
+const ListItem = ({ className, ...props }: ListItemProps) => (
+  <li
+    className={cn(className, 'bidi-plaintext text-start')}
+    dir="auto"
     {...filterProps(props)}
   />
 )
 
 const Paragraph = ({ className, ...props }: ParagraphProps) => (
-  <p className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
+  <p
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
+    {...filterProps(props)}
+  />
 )
 
 const EmphasizedText = ({ className, ...props }: EmphasizedTextProps) => (
@@ -110,7 +125,8 @@ const HorizontalRule = ({ className, ...props }: HorizontalRuleProps) => (
 
 const Blockquote = ({ className, ...props }: BlockquoteProps) => (
   <blockquote
-    className={cn(className, PARAGRAPH_SIZES.lead)}
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
     {...filterProps(props)}
   />
 )
@@ -125,27 +141,51 @@ const AnchorLink = ({ className, ...props }: AnchorLinkProps) => (
 )
 
 const Heading1 = ({ className, ...props }: HeadingProps) => (
-  <h1 className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
+  <h1
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
+    {...filterProps(props)}
+  />
 )
 
 const Heading2 = ({ className, ...props }: HeadingProps) => (
-  <h2 className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
+  <h2
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
+    {...filterProps(props)}
+  />
 )
 
 const Heading3 = ({ className, ...props }: HeadingProps) => (
-  <h3 className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
+  <h3
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
+    {...filterProps(props)}
+  />
 )
 
 const Heading4 = ({ className, ...props }: HeadingProps) => (
-  <h4 className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
+  <h4
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
+    {...filterProps(props)}
+  />
 )
 
 const Heading5 = ({ className, ...props }: HeadingProps) => (
-  <h5 className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
+  <h5
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
+    {...filterProps(props)}
+  />
 )
 
 const Heading6 = ({ className, ...props }: HeadingProps) => (
-  <h6 className={cn(className, PARAGRAPH_SIZES.lead)} {...filterProps(props)} />
+  <h6
+    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    dir="auto"
+    {...filterProps(props)}
+  />
 )
 
 const Img = ({ src, alt }: ImgProps) => {
@@ -190,6 +230,7 @@ export const inlineComponents = {
   h6: Heading6,
   ul: UnorderedList,
   ol: OrderedList,
+  li: ListItem,
   em: EmphasizedText,
   i: ItalicText,
   strong: StrongText,

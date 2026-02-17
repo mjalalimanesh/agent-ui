@@ -13,6 +13,22 @@
   }
 }
 
+@layer utilities {
+  .rtl-logical-indent {
+    padding-inline-start: 2.5rem;
+  }
+
+  .bidi-plaintext {
+    unicode-bidi: plaintext;
+  }
+
+  .ltr-content {
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: isolate;
+  }
+}
+
 ::-webkit-scrollbar {
   width: var(--scrollbar-width);
 }

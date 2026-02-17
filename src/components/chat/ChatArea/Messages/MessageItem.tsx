@@ -1,5 +1,7 @@
 import Icon from '@/components/ui/icon'
 import MarkdownRenderer from '@/components/ui/typography/MarkdownRenderer'
+import { getTextDirection, splitLines } from '@/lib/textDirection'
+import { cn } from '@/lib/utils'
 import { useStore } from '@/store'
 import type { ChatMessage } from '@/types/os'
 import Videos from './Multimedia/Videos'
@@ -79,13 +81,30 @@ const AgentMessage = ({ message }: MessageProps) => {
 }
 
 const UserMessage = memo(({ message }: MessageProps) => {
+  const messageLines = splitLines(message.content)
+
   return (
     <div className="flex items-start gap-4 pt-4 text-start max-md:break-words">
       <div className="flex-shrink-0">
         <Icon type="user" size="sm" />
       </div>
       <div className="text-md rounded-lg font-geist text-secondary">
-        {message.content}
+        {messageLines.map((line, index) => {
+          const lineDirection = getTextDirection(line)
+
+          return (
+            <p
+              key={`${message.created_at}-${index}`}
+              dir={lineDirection}
+              className={cn(
+                'bidi-plaintext break-words whitespace-pre-wrap',
+                lineDirection === 'rtl' ? 'text-right' : 'text-left'
+              )}
+            >
+              {line.length > 0 ? line : '\u00A0'}
+            </p>
+          )
+        })}
       </div>
     </div>
   )
