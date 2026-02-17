@@ -11,6 +11,10 @@
   body {
     @apply bg-background/80 text-secondary;
   }
+
+  [dir='rtl'] {
+    font-family: var(--font-vazirmatn), var(--font-geist-sans), sans-serif;
+  }
 }
 
 @layer utilities {
