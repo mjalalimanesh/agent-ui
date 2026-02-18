@@ -35,7 +35,7 @@ const AgentMessage = ({ message }: MessageProps) => {
     messageContent = (
       <div className="flex w-full flex-col gap-4">
         <MarkdownRenderer
-          classname={agentDirection === 'rtl' ? 'font-vazirmatn' : undefined}
+          classname={agentDirection === 'rtl' ? 'font-vazirmatn' : 'font-geist'}
         >
           {message.content}
         </MarkdownRenderer>
@@ -61,7 +61,7 @@ const AgentMessage = ({ message }: MessageProps) => {
       messageContent = (
         <div className="flex w-full flex-col gap-4">
           <MarkdownRenderer
-            classname={agentDirection === 'rtl' ? 'font-vazirmatn' : undefined}
+            classname={agentDirection === 'rtl' ? 'font-vazirmatn' : 'font-geist'}
           >
             {message.response_audio.transcript}
           </MarkdownRenderer>
@@ -80,7 +80,7 @@ const AgentMessage = ({ message }: MessageProps) => {
   }
 
   return (
-    <div className="flex flex-row items-start gap-4 font-geist">
+    <div className="flex flex-row items-start gap-4">
       <div className="flex-shrink-0">
         <Icon type="agent" size="sm" />
       </div>
@@ -97,7 +97,7 @@ const UserMessage = memo(({ message }: MessageProps) => {
       <div className="flex-shrink-0">
         <Icon type="user" size="sm" />
       </div>
-      <div className="text-md rounded-lg font-geist text-secondary">
+      <div className="text-md rounded-lg text-secondary">
         {messageLines.map((line, index) => {
           const lineDirection = getTextDirection(line)
 
@@ -109,7 +109,7 @@ const UserMessage = memo(({ message }: MessageProps) => {
                 'bidi-plaintext break-words whitespace-pre-wrap',
                 lineDirection === 'rtl'
                   ? 'font-vazirmatn text-right'
-                  : 'text-left'
+                  : 'font-geist text-left'
               )}
             >
               {line.length > 0 ? line : '\u00A0'}

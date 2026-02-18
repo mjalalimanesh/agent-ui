@@ -19,7 +19,7 @@
 
 @layer utilities {
   .font-vazirmatn {
-    font-family: var(--font-vazirmatn), var(--font-geist-sans), sans-serif;
+    font-family: var(--font-vazirmatn), var(--font-geist-sans), sans-serif !important;
   }
 
   .rtl-logical-indent {
