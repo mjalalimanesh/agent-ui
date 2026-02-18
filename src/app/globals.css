@@ -18,6 +18,10 @@
 }
 
 @layer utilities {
+  .font-vazirmatn {
+    font-family: var(--font-vazirmatn), var(--font-geist-sans), sans-serif;
+  }
+
   .rtl-logical-indent {
     padding-inline-start: 2.5rem;
   }

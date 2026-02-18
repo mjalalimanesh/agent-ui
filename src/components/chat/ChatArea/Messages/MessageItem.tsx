@@ -16,6 +16,9 @@ interface MessageProps {
 
 const AgentMessage = ({ message }: MessageProps) => {
   const { streamingErrorMessage } = useStore()
+  const agentPrimaryText =
+    message.content || message.response_audio?.transcript || ''
+  const agentDirection = getTextDirection(agentPrimaryText)
   let messageContent
   if (message.streamingError) {
     messageContent = (
@@ -31,7 +34,11 @@ const AgentMessage = ({ message }: MessageProps) => {
   } else if (message.content) {
     messageContent = (
       <div className="flex w-full flex-col gap-4">
-        <MarkdownRenderer>{message.content}</MarkdownRenderer>
+        <MarkdownRenderer
+          classname={agentDirection === 'rtl' ? 'font-vazirmatn' : undefined}
+        >
+          {message.content}
+        </MarkdownRenderer>
         {message.videos && message.videos.length > 0 && (
           <Videos videos={message.videos} />
         )}
@@ -53,7 +60,9 @@ const AgentMessage = ({ message }: MessageProps) => {
     } else {
       messageContent = (
         <div className="flex w-full flex-col gap-4">
-          <MarkdownRenderer>
+          <MarkdownRenderer
+            classname={agentDirection === 'rtl' ? 'font-vazirmatn' : undefined}
+          >
             {message.response_audio.transcript}
           </MarkdownRenderer>
           {message.response_audio.content && message.response_audio && (
@@ -98,7 +107,9 @@ const UserMessage = memo(({ message }: MessageProps) => {
               dir={lineDirection}
               className={cn(
                 'bidi-plaintext break-words whitespace-pre-wrap',
-                lineDirection === 'rtl' ? 'text-right' : 'text-left'
+                lineDirection === 'rtl'
+                  ? 'font-vazirmatn text-right'
+                  : 'text-left'
               )}
             >
               {line.length > 0 ? line : '\u00A0'}
