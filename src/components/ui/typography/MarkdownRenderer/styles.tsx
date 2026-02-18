@@ -50,7 +50,7 @@ const UnorderedList = ({ className, ...props }: UnorderedListProps) => (
     className={cn(
       className,
       PARAGRAPH_SIZES.body,
-      'rtl-logical-indent flex list-disc flex-col bidi-plaintext text-start'
+      'font-inherit rtl-logical-indent flex list-disc flex-col bidi-plaintext text-start'
     )}
     dir="auto"
     {...filterProps(props)}
@@ -62,7 +62,7 @@ const OrderedList = ({ className, ...props }: OrderedListProps) => (
     className={cn(
       className,
       PARAGRAPH_SIZES.body,
-      'rtl-logical-indent flex list-decimal flex-col bidi-plaintext text-start'
+      'font-inherit rtl-logical-indent flex list-decimal flex-col bidi-plaintext text-start'
     )}
     dir="auto"
     {...filterProps(props)}
@@ -79,7 +79,11 @@ const ListItem = ({ className, ...props }: ListItemProps) => (
 
 const Paragraph = ({ className, ...props }: ParagraphProps) => (
   <p
-    className={cn(className, PARAGRAPH_SIZES.body, 'bidi-plaintext text-start')}
+    className={cn(
+      className,
+      PARAGRAPH_SIZES.body,
+      'font-inherit bidi-plaintext text-start'
+    )}
     dir="auto"
     {...filterProps(props)}
   />
@@ -94,7 +98,7 @@ const EmphasizedText = ({ className, ...props }: EmphasizedTextProps) => (
 
 const ItalicText = ({ className, ...props }: ItalicTextProps) => (
   <i
-    className={cn(className, 'italic', PARAGRAPH_SIZES.body)}
+    className={cn(className, 'italic', PARAGRAPH_SIZES.body, 'font-inherit')}
     {...filterProps(props)}
   />
 )
@@ -115,14 +119,24 @@ const BoldText = ({ className, ...props }: BoldTextProps) => (
 
 const UnderlinedText = ({ className, ...props }: UnderlinedTextProps) => (
   <u
-    className={cn(className, 'underline', PARAGRAPH_SIZES.body)}
+    className={cn(
+      className,
+      'underline',
+      PARAGRAPH_SIZES.body,
+      'font-inherit'
+    )}
     {...filterProps(props)}
   />
 )
 
 const DeletedText = ({ className, ...props }: DeletedTextProps) => (
   <del
-    className={cn(className, 'text-muted line-through', PARAGRAPH_SIZES.body)}
+    className={cn(
+      className,
+      'text-muted line-through',
+      PARAGRAPH_SIZES.body,
+      'font-inherit'
+    )}
     {...filterProps(props)}
   />
 )
@@ -167,7 +181,7 @@ const Blockquote = ({ className, ...props }: BlockquoteProps) => (
   <blockquote
     className={cn(
       className,
-      'bidi-plaintext text-start italic',
+      'font-inherit bidi-plaintext text-start italic',
       PARAGRAPH_SIZES.body
     )}
     dir="auto"
@@ -186,7 +200,11 @@ const AnchorLink = ({ className, ...props }: AnchorLinkProps) => (
 
 const Heading1 = ({ className, ...props }: HeadingProps) => (
   <h1
-    className={cn(className, HEADING_SIZES[3], 'bidi-plaintext text-start')}
+    className={cn(
+      className,
+      HEADING_SIZES[3],
+      'font-inherit bidi-plaintext text-start'
+    )}
     dir="auto"
     {...filterProps(props)}
   />
@@ -194,7 +212,11 @@ const Heading1 = ({ className, ...props }: HeadingProps) => (
 
 const Heading2 = ({ className, ...props }: HeadingProps) => (
   <h2
-    className={cn(className, HEADING_SIZES[3], 'bidi-plaintext text-start')}
+    className={cn(
+      className,
+      HEADING_SIZES[3],
+      'font-inherit bidi-plaintext text-start'
+    )}
     dir="auto"
     {...filterProps(props)}
   />
@@ -202,7 +224,11 @@ const Heading2 = ({ className, ...props }: HeadingProps) => (
 
 const Heading3 = ({ className, ...props }: HeadingProps) => (
   <h3
-    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    className={cn(
+      className,
+      PARAGRAPH_SIZES.lead,
+      'font-inherit bidi-plaintext text-start'
+    )}
     dir="auto"
     {...filterProps(props)}
   />
@@ -210,7 +236,11 @@ const Heading3 = ({ className, ...props }: HeadingProps) => (
 
 const Heading4 = ({ className, ...props }: HeadingProps) => (
   <h4
-    className={cn(className, PARAGRAPH_SIZES.lead, 'bidi-plaintext text-start')}
+    className={cn(
+      className,
+      PARAGRAPH_SIZES.lead,
+      'font-inherit bidi-plaintext text-start'
+    )}
     dir="auto"
     {...filterProps(props)}
   />
@@ -218,7 +248,11 @@ const Heading4 = ({ className, ...props }: HeadingProps) => (
 
 const Heading5 = ({ className, ...props }: HeadingProps) => (
   <h5
-    className={cn(className, PARAGRAPH_SIZES.title, 'bidi-plaintext text-start')}
+    className={cn(
+      className,
+      PARAGRAPH_SIZES.title,
+      'font-inherit bidi-plaintext text-start'
+    )}
     dir="auto"
     {...filterProps(props)}
   />
@@ -226,7 +260,11 @@ const Heading5 = ({ className, ...props }: HeadingProps) => (
 
 const Heading6 = ({ className, ...props }: HeadingProps) => (
   <h6
-    className={cn(className, PARAGRAPH_SIZES.title, 'bidi-plaintext text-start')}
+    className={cn(
+      className,
+      PARAGRAPH_SIZES.title,
+      'font-inherit bidi-plaintext text-start'
+    )}
     dir="auto"
     {...filterProps(props)}
   />
