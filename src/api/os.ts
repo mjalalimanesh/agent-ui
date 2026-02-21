@@ -2,7 +2,7 @@ import { toast } from 'sonner'
 
 import { APIRoutes } from './routes'
 
-import { AgentDetails, Sessions, TeamDetails } from '@/types/os'
+import { AgentDetails, MetabaseEmbedData, Sessions, TeamDetails } from '@/types/os'
 
 // Helper function to create headers with optional auth token
 const createHeaders = (authToken?: string): HeadersInit => {
@@ -165,4 +165,22 @@ export const deleteTeamSessionAPI = async (
     throw new Error(`Failed to delete team session: ${response.statusText}`)
   }
   return response
+}
+
+export const refreshMetabaseEmbedAPI = async (
+  base: string,
+  payload: { question_id: number; title?: string },
+  authToken?: string
+): Promise<MetabaseEmbedData> => {
+  const response = await fetch(APIRoutes.MetabaseEmbedRefresh(base), {
+    method: 'POST',
+    headers: createHeaders(authToken),
+    body: JSON.stringify(payload)
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to refresh Metabase embed: ${response.statusText}`)
+  }
+
+  return response.json()
 }

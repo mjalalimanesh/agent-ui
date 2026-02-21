@@ -127,6 +127,24 @@ export interface NewRunResponse {
   status: 'RUNNING' | 'PAUSED' | 'CANCELLED'
 }
 
+export interface MetabaseEmbedData {
+  kind: 'metabase_question'
+  question_id: number
+  iframe_url: string
+  open_url: string
+  expires_at: number
+  title?: string
+}
+
+export interface RunMetadata {
+  embeds?: MetabaseEmbedData[]
+}
+
+export interface RunSessionState {
+  metabase_embeds?: MetabaseEmbedData[]
+  [key: string]: unknown
+}
+
 export interface RunResponseContent {
   content?: string | object
   content_type: string
@@ -142,6 +160,8 @@ export interface RunResponseContent {
   tool?: ToolCall
   tools?: Array<ToolCall>
   created_at: number
+  metadata?: RunMetadata
+  session_state?: RunSessionState
   extra_data?: AgentExtraData
   images?: ImageData[]
   videos?: VideoData[]
@@ -164,6 +184,8 @@ export interface RunResponse {
   tool?: ToolCall
   tools?: Array<ToolCall>
   created_at: number
+  metadata?: RunMetadata
+  session_state?: RunSessionState
   extra_data?: AgentExtraData
   images?: ImageData[]
   videos?: VideoData[]
@@ -175,11 +197,7 @@ export interface AgentExtraData {
   reasoning_steps?: ReasoningSteps[]
   reasoning_messages?: ReasoningMessage[]
   references?: ReferenceData[]
-}
-
-export interface AgentExtraData {
-  reasoning_messages?: ReasoningMessage[]
-  references?: ReferenceData[]
+  embeds?: MetabaseEmbedData[]
 }
 
 export interface ReasoningMessage {
@@ -200,11 +218,7 @@ export interface ChatMessage {
   streamingError?: boolean
   created_at: number
   tool_calls?: ToolCall[]
-  extra_data?: {
-    reasoning_steps?: ReasoningSteps[]
-    reasoning_messages?: ReasoningMessage[]
-    references?: ReferenceData[]
-  }
+  extra_data?: AgentExtraData
   images?: ImageData[]
   videos?: VideoData[]
   audio?: AudioData[]
@@ -292,11 +306,7 @@ export interface ChatEntry {
   response: {
     content: string
     tools?: ToolCall[]
-    extra_data?: {
-      reasoning_steps?: ReasoningSteps[]
-      reasoning_messages?: ReasoningMessage[]
-      references?: ReferenceData[]
-    }
+    extra_data?: AgentExtraData
     images?: ImageData[]
     videos?: VideoData[]
     audio?: AudioData[]

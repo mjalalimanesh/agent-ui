@@ -7,6 +7,7 @@ import type { ChatMessage } from '@/types/os'
 import Videos from './Multimedia/Videos'
 import Images from './Multimedia/Images'
 import Audios from './Multimedia/Audios'
+import MetabaseEmbeds from './Multimedia/Embeds'
 import { memo } from 'react'
 import AgentThinkingLoader from './AgentThinkingLoader'
 
@@ -19,6 +20,7 @@ const AgentMessage = ({ message }: MessageProps) => {
   const agentPrimaryText =
     message.content || message.response_audio?.transcript || ''
   const agentDirection = getTextDirection(agentPrimaryText)
+  const embeds = message.extra_data?.embeds ?? []
   let messageContent
   if (message.streamingError) {
     messageContent = (
@@ -31,14 +33,17 @@ const AgentMessage = ({ message }: MessageProps) => {
         )}
       </p>
     )
-  } else if (message.content) {
+  } else if (message.content || embeds.length > 0) {
     messageContent = (
       <div className="flex w-full flex-col gap-4">
-        <MarkdownRenderer
-          classname={agentDirection === 'rtl' ? 'font-vazirmatn' : 'font-geist'}
-        >
-          {message.content}
-        </MarkdownRenderer>
+        {(message.content || message.response_audio?.transcript) && (
+          <MarkdownRenderer
+            classname={agentDirection === 'rtl' ? 'font-vazirmatn' : 'font-geist'}
+          >
+            {message.content || message.response_audio?.transcript}
+          </MarkdownRenderer>
+        )}
+        {embeds.length > 0 && <MetabaseEmbeds embeds={embeds} />}
         {message.videos && message.videos.length > 0 && (
           <Videos videos={message.videos} />
         )}
@@ -47,6 +52,9 @@ const AgentMessage = ({ message }: MessageProps) => {
         )}
         {message.audio && message.audio.length > 0 && (
           <Audios audio={message.audio} />
+        )}
+        {message.response_audio?.content && (
+          <Audios audio={[message.response_audio]} />
         )}
       </div>
     )

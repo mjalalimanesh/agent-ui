@@ -12,6 +12,8 @@ export const APIRoutes = {
   GetTeams: (agentOSUrl: string) => `${agentOSUrl}/teams`,
   TeamRun: (agentOSUrl: string, teamId: string) =>
     `${agentOSUrl}/teams/${teamId}/runs`,
+  MetabaseEmbedRefresh: (agentOSUrl: string) =>
+    `${agentOSUrl}/api/metabase/embed/refresh`,
   DeleteTeamSession: (agentOSUrl: string, teamId: string, sessionId: string) =>
     `${agentOSUrl}/v1//teams/${teamId}/sessions/${sessionId}`
 }

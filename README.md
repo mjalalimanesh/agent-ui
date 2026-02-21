@@ -113,6 +113,17 @@ Once you've configured the endpoint:
 2. If successful, you'll see your agents available in the chat interface
 3. If there are connection issues, check that your AgentOS is running and accessible. Check out the troubleshooting guide [here](https://docs.agno.com/faq/agentos-connection)
 
+## Metabase Embed Security
+
+If your agent returns signed Metabase iframe embeds, set:
+
+```bash
+NEXT_PUBLIC_METABASE_ORIGIN=https://your-metabase-domain
+```
+
+This origin is applied to the UI's `Content-Security-Policy` `frame-src` directive so only the configured Metabase host can be framed.
+If Metabase is private (for example, VPN-only), embedded charts will work only for users on that network.
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines.

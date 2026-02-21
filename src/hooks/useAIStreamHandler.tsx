@@ -4,12 +4,61 @@ import { APIRoutes } from '@/api/routes'
 
 import useChatActions from '@/hooks/useChatActions'
 import { useStore } from '../store'
-import { RunEvent, RunResponseContent, type RunResponse } from '@/types/os'
+import {
+  RunEvent,
+  RunResponseContent,
+  type MetabaseEmbedData,
+  type RunResponse
+} from '@/types/os'
 import { constructEndpointUrl } from '@/lib/constructEndpointUrl'
 import useAIResponseStream from './useAIResponseStream'
 import { ToolCall } from '@/types/os'
 import { useQueryState } from 'nuqs'
 import { getJsonMarkdown } from '@/lib/utils'
+
+const isMetabaseEmbedData = (value: unknown): value is MetabaseEmbedData => {
+  if (!value || typeof value !== 'object') return false
+  const data = value as Partial<MetabaseEmbedData>
+  return (
+    data.kind === 'metabase_question' &&
+    typeof data.question_id === 'number' &&
+    Number.isFinite(data.question_id) &&
+    typeof data.iframe_url === 'string' &&
+    typeof data.open_url === 'string' &&
+    typeof data.expires_at === 'number'
+  )
+}
+
+const parseEmbeds = (value: unknown): MetabaseEmbedData[] => {
+  if (!Array.isArray(value)) return []
+  return value.filter(isMetabaseEmbedData)
+}
+
+const mergeEmbeds = (
+  existingEmbeds: MetabaseEmbedData[] = [],
+  incomingEmbeds: MetabaseEmbedData[] = []
+): MetabaseEmbedData[] => {
+  const merged = new Map<string, MetabaseEmbedData>()
+  for (const embed of existingEmbeds) {
+    merged.set(`${embed.kind}-${embed.question_id}`, embed)
+  }
+  for (const embed of incomingEmbeds) {
+    merged.set(`${embed.kind}-${embed.question_id}`, embed)
+  }
+  return Array.from(merged.values())
+}
+
+const extractEmbedsFromChunk = (
+  chunk: RunResponseContent | RunResponse
+): MetabaseEmbedData[] => {
+  const embedsFromExtraData = parseEmbeds(chunk.extra_data?.embeds)
+  const embedsFromMetadata = parseEmbeds(chunk.metadata?.embeds)
+  const embedsFromSessionState = parseEmbeds(chunk.session_state?.metabase_embeds)
+  return mergeEmbeds(
+    mergeEmbeds(embedsFromExtraData, embedsFromMetadata),
+    embedsFromSessionState
+  )
+}
 
 const useAIChatStreamHandler = () => {
   const setMessages = useStore((state) => state.setMessages)
@@ -222,6 +271,7 @@ const useAIChatStreamHandler = () => {
               chunk.event === RunEvent.RunContent ||
               chunk.event === RunEvent.TeamRunContent
             ) {
+              const incomingEmbeds = extractEmbedsFromChunk(chunk)
               setMessages((prevMessages) => {
                 const newMessages = [...prevMessages]
                 const lastMessage = newMessages[newMessages.length - 1]
@@ -239,18 +289,18 @@ const useAIChatStreamHandler = () => {
                     chunk,
                     lastMessage.tool_calls
                   )
-                  if (chunk.extra_data?.reasoning_steps) {
-                    lastMessage.extra_data = {
-                      ...lastMessage.extra_data,
-                      reasoning_steps: chunk.extra_data.reasoning_steps
-                    }
-                  }
-
-                  if (chunk.extra_data?.references) {
-                    lastMessage.extra_data = {
-                      ...lastMessage.extra_data,
-                      references: chunk.extra_data.references
-                    }
+                  lastMessage.extra_data = {
+                    ...lastMessage.extra_data,
+                    reasoning_steps:
+                      chunk.extra_data?.reasoning_steps ??
+                      lastMessage.extra_data?.reasoning_steps,
+                    references:
+                      chunk.extra_data?.references ??
+                      lastMessage.extra_data?.references,
+                    embeds: mergeEmbeds(
+                      lastMessage.extra_data?.embeds,
+                      incomingEmbeds
+                    )
                   }
 
                   lastMessage.created_at =
@@ -313,10 +363,23 @@ const useAIChatStreamHandler = () => {
                 const newMessages = [...prevMessages]
                 const lastMessage = newMessages[newMessages.length - 1]
                 if (lastMessage && lastMessage.role === 'agent') {
+                  const incomingEmbeds = extractEmbedsFromChunk(chunk)
                   if (chunk.extra_data?.reasoning_steps) {
                     lastMessage.extra_data = {
                       ...lastMessage.extra_data,
-                      reasoning_steps: chunk.extra_data.reasoning_steps
+                      reasoning_steps: chunk.extra_data.reasoning_steps,
+                      embeds: mergeEmbeds(
+                        lastMessage.extra_data?.embeds,
+                        incomingEmbeds
+                      )
+                    }
+                  } else if (incomingEmbeds.length > 0) {
+                    lastMessage.extra_data = {
+                      ...lastMessage.extra_data,
+                      embeds: mergeEmbeds(
+                        lastMessage.extra_data?.embeds,
+                        incomingEmbeds
+                      )
                     }
                   }
                 }
@@ -352,6 +415,7 @@ const useAIChatStreamHandler = () => {
               chunk.event === RunEvent.RunCompleted ||
               chunk.event === RunEvent.TeamRunCompleted
             ) {
+              const incomingEmbeds = extractEmbedsFromChunk(chunk)
               setMessages((prevMessages) => {
                 const newMessages = prevMessages.map((message, index) => {
                   if (
@@ -385,7 +449,11 @@ const useAIChatStreamHandler = () => {
                           message.extra_data?.reasoning_steps,
                         references:
                           chunk.extra_data?.references ??
-                          message.extra_data?.references
+                          message.extra_data?.references,
+                        embeds: mergeEmbeds(
+                          message.extra_data?.embeds,
+                          incomingEmbeds
+                        )
                       }
                     }
                   }
