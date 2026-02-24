@@ -7,6 +7,7 @@ import { useStore } from '../store'
 import {
   RunEvent,
   RunResponseContent,
+  type ImageData,
   type MetabaseEmbedData,
   type RunResponse
 } from '@/types/os'
@@ -58,6 +59,19 @@ const extractEmbedsFromChunk = (
     mergeEmbeds(embedsFromExtraData, embedsFromMetadata),
     embedsFromSessionState
   )
+}
+
+const getUploadedImagePreviews = (formData: FormData): ImageData[] => {
+  return formData
+    .getAll('files')
+    .filter(
+      (entry): entry is File =>
+        entry instanceof File && entry.type.startsWith('image/')
+    )
+    .map((file) => ({
+      revised_prompt: file.name || 'Uploaded image',
+      url: URL.createObjectURL(file)
+    }))
 }
 
 const useAIChatStreamHandler = () => {
@@ -156,6 +170,15 @@ const useAIChatStreamHandler = () => {
       if (typeof input === 'string') {
         formData.append('message', input)
       }
+      const hasUploadedFiles = formData.getAll('files').length > 0
+      const rawMessage = String(formData.get('message') ?? '')
+      const uploadedImagePreviews = getUploadedImagePreviews(formData)
+      const userVisibleMessage =
+        rawMessage.trim().length > 0
+          ? rawMessage
+          : hasUploadedFiles
+            ? '[Image attached]'
+            : ''
 
       setMessages((prevMessages) => {
         if (prevMessages.length >= 2) {
@@ -174,7 +197,8 @@ const useAIChatStreamHandler = () => {
 
       addMessage({
         role: 'user',
-        content: formData.get('message') as string,
+        content: userVisibleMessage,
+        images: uploadedImagePreviews.length > 0 ? uploadedImagePreviews : undefined,
         created_at: Math.floor(Date.now() / 1000)
       })
 
@@ -237,7 +261,7 @@ const useAIChatStreamHandler = () => {
               ) {
                 const sessionData = {
                   session_id: chunk.session_id as string,
-                  session_name: formData.get('message') as string,
+                  session_name: userVisibleMessage,
                   created_at: chunk.created_at
                 }
                 setSessionsData((prevSessionsData) => {

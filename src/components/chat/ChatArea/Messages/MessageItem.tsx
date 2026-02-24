@@ -98,32 +98,37 @@ const AgentMessage = ({ message }: MessageProps) => {
 }
 
 const UserMessage = memo(({ message }: MessageProps) => {
-  const messageLines = splitLines(message.content)
+  const hasImages = Boolean(message.images && message.images.length > 0)
+  const showPlaceholderOnly = hasImages && message.content.trim() === '[Image attached]'
+  const messageLines = showPlaceholderOnly ? [] : splitLines(message.content)
 
   return (
     <div className="flex items-start gap-4 pt-4 text-start max-md:break-words">
       <div className="flex-shrink-0">
         <Icon type="user" size="sm" />
       </div>
-      <div className="text-md rounded-lg text-secondary">
-        {messageLines.map((line, index) => {
-          const lineDirection = getTextDirection(line)
+      <div className="text-md flex rounded-lg text-secondary">
+        <div className="flex flex-col gap-4">
+          {messageLines.map((line, index) => {
+            const lineDirection = getTextDirection(line)
 
-          return (
-            <p
-              key={`${message.created_at}-${index}`}
-              dir={lineDirection}
-              className={cn(
-                'bidi-plaintext break-words whitespace-pre-wrap',
-                lineDirection === 'rtl'
-                  ? 'font-vazirmatn text-right'
-                  : 'font-geist text-left'
-              )}
-            >
-              {line.length > 0 ? line : '\u00A0'}
-            </p>
-          )
-        })}
+            return (
+              <p
+                key={`${message.created_at}-${index}`}
+                dir={lineDirection}
+                className={cn(
+                  'bidi-plaintext break-words whitespace-pre-wrap',
+                  lineDirection === 'rtl'
+                    ? 'font-vazirmatn text-right'
+                    : 'font-geist text-left'
+                )}
+              >
+                {line.length > 0 ? line : '\u00A0'}
+              </p>
+            )
+          })}
+          {hasImages && <Images images={message.images ?? []} />}
+        </div>
       </div>
     </div>
   )
